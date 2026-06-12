@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     manifest_db: Path = REPO_ROOT / "data" / "manifest.sqlite"
     qdrant_path: Path = REPO_ROOT / "data" / "qdrant"
 
-    # --- scraper politeness (government sites: be a good citizen) ---
+    # downloader — keep requests slow and polite on government servers
     request_delay_s: float = 3.0
     request_timeout_s: float = 60.0
     max_retries: int = 5
@@ -30,17 +30,15 @@ class Settings(BaseSettings):
         "contact: FILL_YOUR_EMAIL)"
     )
 
-    # --- models (all local; nothing leaves the machine) ---
+    # all models run locally — nothing is sent to any external API
     embedding_model: str = "BAAI/bge-m3"
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     generation_model: str = "Qwen/Qwen2.5-14B-Instruct"
-    judge_model: str = "Qwen/Qwen2.5-32B-Instruct-AWQ"  # eval-only, served locally
-    # vLLM serves the generation model on localhost. This is a local process,
-    # not an external API: the OpenAI *client library* is used purely as the
-    # wire protocol to talk to our own GPU.
+    judge_model: str = "Qwen/Qwen2.5-32B-Instruct-AWQ"  # only used during eval
+    # openai client is just used as the wire protocol to talk to our local vLLM server
     llm_base_url: str = "http://127.0.0.1:8000/v1"
 
-    # --- retrieval defaults (ablated in eval/, see RESULTS.md) ---
+    # retrieval knobs — these get ablated in eval/, results go in RESULTS.md
     dense_top_k: int = 30
     bm25_top_k: int = 30
     rerank_top_k: int = 8

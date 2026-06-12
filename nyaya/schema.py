@@ -1,7 +1,7 @@
-"""Canonical data models for the Nyaya-RAG corpus.
+"""Data models shared across all pipeline stages.
 
-Every pipeline stage (download -> extract -> parse -> chunk -> index)
-reads and writes these models. If a field is not here, it does not exist.
+All pipeline stages (download → extract → parse → chunk → index) use
+these models. Add new fields here, not in individual pipeline files.
 """
 
 from __future__ import annotations
@@ -13,15 +13,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Era(StrEnum):
-    """Which criminal-law regime a text belongs to.
+    """Criminal law era for a chunk of text.
 
-    The 2024 transition (effective 1 July 2024) replaced:
-      IPC 1860  -> Bharatiya Nyaya Sanhita 2023 (BNS)
-      CrPC 1973 -> Bharatiya Nagarik Suraksha Sanhita 2023 (BNSS)
-      IEA 1872  -> Bharatiya Sakshya Adhiniyam 2023 (BSA)
-
-    Acts untouched by the transition (Consumer Protection Act, RTI, ...)
-    are tagged NEUTRAL and are retrievable under either era filter.
+    From 1 July 2024, IPC→BNS, CrPC→BNSS, IEA→BSA came into effect.
+    Acts that weren't part of this transition (RTI, Consumer Protection, etc.)
+    get NEUTRAL so they show up regardless of which era you filter by.
     """
 
     OLD_CODE = "old_code"
@@ -99,8 +95,7 @@ class DocumentMeta(BaseModel):
 
 
 class Chunk(BaseModel):
-    """One retrieval unit. For acts: exactly one section. For judgments:
-    one 300-800 token paragraph window with case metadata prepended."""
+    """A single retrieval unit — one section for statutes, one paragraph window for judgments."""
 
     id: str = Field(description="e.g. 'bns_2023:s103' or 'sc_1973_kesavananda:p041'")
     text: str = Field(min_length=1)

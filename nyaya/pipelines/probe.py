@@ -1,12 +1,7 @@
-"""Corpus probe: inspect every downloaded PDF and write a layout report.
+"""Quick scan of downloaded PDFs — checks if they're digital or scanned,
+finds repeated headers/footers, and grabs a body text sample.
 
-Run after `make download`. For each PDF in data/raw/ it reports page count,
-text density (digital vs scanned verdict), header/footer candidates
-(lines repeated across pages — these become the Day-2 cleaning regexes),
-and a short sample of real body text.
-
-The report (docs/probe_report.md) contains everything needed to design the
-extraction + section-tree parser without shipping the PDFs anywhere.
+Run after `make download`. Output goes to docs/probe_report.md.
 
 Usage:
     python -m nyaya.pipelines.probe
@@ -29,16 +24,13 @@ from nyaya.config import REPO_ROOT, settings
 
 log = logging.getLogger("nyaya.probe")
 
-# below this many extracted characters per page, the page is image-only
-SCANNED_CHARS_PER_PAGE = 100
-# a first/last line counts as a header/footer candidate if it recurs on
-# at least this fraction of pages
-REPEAT_FRACTION = 0.4
+SCANNED_CHARS_PER_PAGE = 100  # pages with less than this are probably scanned images
+REPEAT_FRACTION = 0.4  # a line counts as header/footer if it shows up on 40%+ of pages
 SAMPLE_CHARS = 400
 
 
 def _normalize_line(line: str) -> str:
-    """Collapse digits so 'Page 12' and 'Page 13' cluster together."""
+    # collapse numbers so "Page 12" and "Page 13" both become "Page #"
     return re.sub(r"\d+", "#", re.sub(r"\s+", " ", line.strip()))
 
 
@@ -59,7 +51,7 @@ def probe_pdf(path: Path) -> dict[str, Any]:
                 first_lines[_normalize_line(ln)] += 1
             for ln in lines[-2:]:
                 last_lines[_normalize_line(ln)] += 1
-        # body sample from page 2 (page 1 is usually a cover / gazette banner)
+        # skip page 1 — it's usually the gazette cover, not actual content
         if not sample and i >= 1 and len(text) > SCANNED_CHARS_PER_PAGE:
             sample = re.sub(r"\s+", " ", text)[:SAMPLE_CHARS]
     doc.close()
@@ -87,7 +79,7 @@ def render_report(results: dict[str, dict[str, Any]]) -> str:
     lines = [
         "# Corpus probe report",
         "",
-        "Paste this whole file back to Claude to design the Day-2 parser.",
+        "Use this report to design the extraction and section-tree parser.",
         "",
         "| doc | pages | chars/page | text pages | verdict |",
         "|---|---|---|---|---|",

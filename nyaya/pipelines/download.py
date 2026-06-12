@@ -1,12 +1,9 @@
-"""Resumable downloader for the Nyaya-RAG raw corpus.
+"""Downloads PDFs listed in acts_catalog.yaml into data/raw/.
 
-Reads configs/acts_catalog.yaml, fetches each verified PDF URL, writes
-data/raw/<id>.pdf plus a JSON metadata sidecar data/raw/<id>.meta.json,
-and records every attempt in a SQLite manifest so a crashed or
-interrupted run resumes exactly where it stopped.
-
-Politeness guarantees: respects robots.txt, configurable inter-request
-delay, exponential-backoff retries, descriptive User-Agent.
+Saves a metadata sidecar (.meta.json) next to each PDF and tracks every
+attempt in a SQLite manifest so you can safely kill and resume the job.
+Respects robots.txt and adds a delay between requests — these are
+government servers, no need to hammer them.
 
 Usage:
     python -m nyaya.pipelines.download --dry-run
@@ -101,7 +98,7 @@ class Manifest:
 
 
 class RobotsCache:
-    """Per-host robots.txt check, fetched once per host."""
+    """Caches robots.txt per domain so we only fetch it once."""
 
     def __init__(self, user_agent: str) -> None:
         self.user_agent = user_agent
