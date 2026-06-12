@@ -1,0 +1,25 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+data/raw/*
+data/interim/*
+data/processed/*
+data/qdrant/
+data/manifest.sqlite
+!data/*/.gitkeep
+*.gguf
+wandb/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+
+# internal workflow files — not for public repo
+CLAUDE.md
+handoffs/
+docs/HANDOFF_PROTOCOL.md
+SUPERCOMPUTER_BRIEF.md
+
+# build artifacts
+*.egg-info/

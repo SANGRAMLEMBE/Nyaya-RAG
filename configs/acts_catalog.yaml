@@ -1,0 +1,222 @@
+# Nyaya-RAG v1 corpus catalog.
+#
+# url: fill each one MANUALLY from indiacode.nic.in (Browse -> Central Acts ->
+# act page -> the PDF link under "Act Detail"), or legislative.gov.in for the
+# Constitution. Do NOT guess URLs — the downloader validates content-type and
+# PDF magic bytes, and refuses entries without a verified https URL.
+# This manual step is deliberate: it doubles as a licensing + provenance audit.
+#
+# era: old_code (pre-1 July 2024 criminal regime) | new_code | neutral
+# priority: 1 = required for v1 gold-set coverage, 2 = stretch
+
+acts:
+  # ---- the 2024 transition: BOTH eras stay in the corpus, era-tagged ----
+  - id: bns_2023
+    title: Bharatiya Nyaya Sanhita, 2023
+    year: 2023
+    era: new_code
+    subject: criminal
+    priority: 1
+    source: India Code
+    url: null
+  - id: bnss_2023
+    title: Bharatiya Nagarik Suraksha Sanhita, 2023
+    year: 2023
+    era: new_code
+    subject: criminal_procedure
+    priority: 1
+    source: India Code
+    url: null
+  - id: bsa_2023
+    title: Bharatiya Sakshya Adhiniyam, 2023
+    year: 2023
+    era: new_code
+    subject: evidence
+    priority: 1
+    source: India Code
+    url: null
+  - id: ipc_1860
+    title: Indian Penal Code, 1860
+    year: 1860
+    era: old_code
+    subject: criminal
+    priority: 1
+    source: India Code
+    url: null
+    notes: repealed 1 July 2024; governs offences committed before that date
+  - id: crpc_1973
+    title: Code of Criminal Procedure, 1973
+    year: 1973
+    era: old_code
+    subject: criminal_procedure
+    priority: 1
+    source: India Code
+    url: null
+  - id: iea_1872
+    title: Indian Evidence Act, 1872
+    year: 1872
+    era: old_code
+    subject: evidence
+    priority: 1
+    source: India Code
+    url: null
+
+  # ---- constitutional backbone ----
+  - id: constitution
+    title: Constitution of India (latest amended edition)
+    year: 1950
+    era: neutral
+    subject: constitutional
+    priority: 1
+    source: Legislative Department
+    url: null
+    notes: use the most recent amended PDF from legislative.gov.in
+
+  # ---- everyday-law acts (gold-set coverage: consumer, cyber, RTI, cheques,
+  #      accidents, family, tenancy-adjacent, women's safety, labour) ----
+  - id: cpa_2019
+    title: Consumer Protection Act, 2019
+    year: 2019
+    era: neutral
+    subject: consumer
+    priority: 1
+    source: India Code
+    url: null
+  - id: it_act_2000
+    title: Information Technology Act, 2000
+    year: 2000
+    era: neutral
+    subject: cyber
+    priority: 1
+    source: India Code
+    url: null
+  - id: rti_2005
+    title: Right to Information Act, 2005
+    year: 2005
+    era: neutral
+    subject: transparency
+    priority: 1
+    source: India Code
+    url: null
+  - id: ni_act_1881
+    title: Negotiable Instruments Act, 1881
+    year: 1881
+    era: neutral
+    subject: financial
+    priority: 1
+    source: India Code
+    url: null
+    notes: Section 138 cheque bounce — top real-world query
+  - id: mva_1988
+    title: Motor Vehicles Act, 1988
+    year: 1988
+    era: neutral
+    subject: transport
+    priority: 1
+    source: India Code
+    url: null
+  - id: hma_1955
+    title: Hindu Marriage Act, 1955
+    year: 1955
+    era: neutral
+    subject: family
+    priority: 1
+    source: India Code
+    url: null
+  - id: hsa_1956
+    title: Hindu Succession Act, 1956
+    year: 1956
+    era: neutral
+    subject: family
+    priority: 2
+    source: India Code
+    url: null
+  - id: sma_1954
+    title: Special Marriage Act, 1954
+    year: 1954
+    era: neutral
+    subject: family
+    priority: 2
+    source: India Code
+    url: null
+  - id: contract_1872
+    title: Indian Contract Act, 1872
+    year: 1872
+    era: neutral
+    subject: contract
+    priority: 1
+    source: India Code
+    url: null
+  - id: tpa_1882
+    title: Transfer of Property Act, 1882
+    year: 1882
+    era: neutral
+    subject: property
+    priority: 2
+    source: India Code
+    url: null
+  - id: pwdva_2005
+    title: Protection of Women from Domestic Violence Act, 2005
+    year: 2005
+    era: neutral
+    subject: women_safety
+    priority: 1
+    source: India Code
+    url: null
+  - id: dowry_1961
+    title: Dowry Prohibition Act, 1961
+    year: 1961
+    era: neutral
+    subject: women_safety
+    priority: 2
+    source: India Code
+    url: null
+  - id: posh_2013
+    title: Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013
+    year: 2013
+    era: neutral
+    subject: women_safety
+    priority: 1
+    source: India Code
+    url: null
+  - id: cpc_1908
+    title: Code of Civil Procedure, 1908
+    year: 1908
+    era: neutral
+    subject: civil_procedure
+    priority: 2
+    source: India Code
+    url: null
+  - id: limitation_1963
+    title: Limitation Act, 1963
+    year: 1963
+    era: neutral
+    subject: civil_procedure
+    priority: 2
+    source: India Code
+    url: null
+  - id: lsa_1987
+    title: Legal Services Authorities Act, 1987
+    year: 1987
+    era: neutral
+    subject: legal_aid
+    priority: 1
+    source: India Code
+    url: null
+    notes: basis for NALSA free legal aid — feeds the escalation footer
+  - id: id_act_1947
+    title: Industrial Disputes Act, 1947
+    year: 1947
+    era: neutral
+    subject: labour
+    priority: 2
+    source: India Code
+    url: null
+  - id: maternity_1961
+    title: Maternity Benefit Act, 1961
+    year: 1961
+    era: neutral
+    subject: labour
+    priority: 2
+    source: India Code
+    url: null
