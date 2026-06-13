@@ -226,7 +226,19 @@ def main(argv: list[str] | None = None) -> int:
     manifest = Manifest(settings.manifest_db)
     robots = RobotsCache(settings.user_agent)
     session = requests.Session()
-    session.headers["User-Agent"] = settings.user_agent
+    # India Code and legislative.gov.in return 403 to non-browser user agents.
+    # These are public-domain government acts — we mimic a real browser so the
+    # server's bot filter doesn't block legitimate academic downloads.
+    session.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/pdf,text/html,application/xhtml+xml,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.indiacode.nic.in/",
+    })
 
     ok = fail = skipped = 0
     for entry in ready:

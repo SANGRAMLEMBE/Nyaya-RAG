@@ -18,7 +18,7 @@ acts:
     subject: criminal
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/20062/1/a202345.pdf
   - id: bnss_2023
     title: Bharatiya Nagarik Suraksha Sanhita, 2023
     year: 2023
@@ -26,7 +26,7 @@ acts:
     subject: criminal_procedure
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/20099/1/eng.pdf
   - id: bsa_2023
     title: Bharatiya Sakshya Adhiniyam, 2023
     year: 2023
@@ -34,7 +34,7 @@ acts:
     subject: evidence
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/20063/1/aa202347.pdf
   - id: ipc_1860
     title: Indian Penal Code, 1860
     year: 1860
@@ -42,7 +42,7 @@ acts:
     subject: criminal
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/4219/1/THE-INDIAN-PENAL-CODE-1860.pdf
     notes: repealed 1 July 2024; governs offences committed before that date
   - id: crpc_1973
     title: Code of Criminal Procedure, 1973
@@ -51,7 +51,7 @@ acts:
     subject: criminal_procedure
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/15272/1/the_code_of_criminal_procedure,_1973.pdf
   - id: iea_1872
     title: Indian Evidence Act, 1872
     year: 1872
@@ -59,7 +59,7 @@ acts:
     subject: evidence
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/4218/1/THE-INDIAN-EVIDENCE-ACT-1872.pdf
 
   # ---- constitutional backbone ----
   - id: constitution
@@ -69,7 +69,7 @@ acts:
     subject: constitutional
     priority: 1
     source: Legislative Department
-    url: null
+    url: https://www.legislative.gov.in/static/uploads/2025/07/359f70a69695affb9d72f8393102bd2e.pdf
     notes: use the most recent amended PDF from legislative.gov.in
 
   # ---- everyday-law acts (gold-set coverage: consumer, cyber, RTI, cheques,
@@ -81,7 +81,7 @@ acts:
     subject: consumer
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/15256/1/eng201935.pdf
   - id: it_act_2000
     title: Information Technology Act, 2000
     year: 2000
@@ -89,7 +89,7 @@ acts:
     subject: cyber
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/1999/1/A2000-21%20%281%29.pdf
   - id: rti_2005
     title: Right to Information Act, 2005
     year: 2005
@@ -97,7 +97,7 @@ acts:
     subject: transparency
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/2065/1/aa2005.pdf
   - id: ni_act_1881
     title: Negotiable Instruments Act, 1881
     year: 1881
@@ -105,7 +105,7 @@ acts:
     subject: financial
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/2189/1/a1881-26.pdf
     notes: Section 138 cheque bounce — top real-world query
   - id: mva_1988
     title: Motor Vehicles Act, 1988
@@ -114,7 +114,7 @@ acts:
     subject: transport
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/1798/1/aA1988-59.pdf
   - id: hma_1955
     title: Hindu Marriage Act, 1955
     year: 1955
@@ -122,7 +122,7 @@ acts:
     subject: family
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/1560/1/A1955-25Eng.pdf
   - id: hsa_1956
     title: Hindu Succession Act, 1956
     year: 1956
@@ -146,7 +146,7 @@ acts:
     subject: contract
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/2187/2/A187209.pdf
   - id: tpa_1882
     title: Transfer of Property Act, 1882
     year: 1882
@@ -162,7 +162,7 @@ acts:
     subject: women_safety
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/2021/5/A2005-43.pdf
   - id: dowry_1961
     title: Dowry Prohibition Act, 1961
     year: 1961
@@ -178,7 +178,7 @@ acts:
     subject: women_safety
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/2104/1/A2013-14.pdf
   - id: cpc_1908
     title: Code of Civil Procedure, 1908
     year: 1908
@@ -202,7 +202,7 @@ acts:
     subject: legal_aid
     priority: 1
     source: India Code
-    url: null
+    url: https://www.indiacode.nic.in/bitstream/123456789/1925/1/198739.pdf
     notes: basis for NALSA free legal aid — feeds the escalation footer
   - id: id_act_1947
     title: Industrial Disputes Act, 1947

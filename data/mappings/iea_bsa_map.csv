@@ -1,0 +1,186 @@
+iea_section,bsa_section,note
+1,1,Short title extent and commencement
+2,2,Interpretation clause
+3,3,Interpretation of "may presume" "shall presume" and "conclusive proof"
+4,4,May presume
+5,5,Evidence may be given of facts in issue and relevant facts
+6,6,Relevancy of facts forming part of same transaction
+7,7,Facts which are the occasion cause or effect of facts in issue
+8,8,Motive preparation and previous or subsequent conduct
+9,9,Facts necessary to explain or introduce relevant facts
+10,10,Things said or done by conspirator in reference to common design
+11,11,When facts not otherwise relevant become relevant
+12,12,In suits for damages facts tending to enable Court to determine amount are relevant
+13,13,Facts relevant when right or custom is in question
+14,14,Facts showing existence of state of mind or of body or bodily feeling
+15,15,Facts bearing on question whether act was accidental or intentional
+16,16,Existence of course of business relevant
+17,17,Admission defined
+18,18,Admission by party to proceeding or his agent — by suitor in representative character — by party interested in subject-matter — by person from whom interest derived
+19,19,Admissions by persons whose position must be proved as against party to suit
+20,20,Admissions by persons expressly referred to by party to suit
+21,21,Proof of admissions against persons making them and by or on their behalf
+22,22,When oral admissions as to contents of documents are relevant
+22A,22A,When oral admissions as to contents of electronic records are relevant
+23,23,Admissions in civil cases when relevant
+24,24,Confession caused by inducement threat or promise when irrelevant in criminal proceeding
+25,25,Confession to police officer not to be proved
+26,26,Confession by accused while in custody of police not to be proved against him
+27,27,How much of information received from accused may be proved
+28,28,Confession made after removal of impression caused by inducement threat or promise relevant
+29,29,Confession otherwise relevant not to become irrelevant because of promise of secrecy etc
+30,30,Consideration of proved confession affecting person making it and others jointly under trial for same offence
+31,31,Admissions not conclusive proof but may estop
+32,32,Cases in which statement of relevant fact by person who is dead or cannot be found etc is relevant
+33,33,Relevancy of certain evidence for proving in subsequent proceeding the truth of facts therein stated
+34,34,Entries in books of account including those maintained in an electronic form when relevant
+35,35,Relevancy of entry in public record or an electronic record made in performance of duty
+36,36,Relevancy of statements in maps charts and plans
+37,37,Relevancy of statement as to fact of public nature contained in certain Acts or notifications
+38,38,Relevancy of statements as to any law contained in law books
+39,39,What evidence to be given when statement forms part of a conversation document book or series of letters or papers
+40,40,Previous judgments relevant to bar a second suit or trial
+41,41,Relevancy of certain judgments in probate etc jurisdiction
+42,42,Relevancy and effect of judgments orders or decrees other than those mentioned in section 41
+43,43,Judgments etc other than those mentioned in sections 40 to 42 when relevant
+44,44,Fraud or collusion in obtaining judgment or incompetency of Court may be proved
+45,45,Opinions of experts
+45A,45A,Opinion of Examiner of Electronic Evidence
+46,46,Facts bearing upon opinions of experts
+47,47,Opinion as to handwriting when relevant
+47A,47A,Opinion as to electronic signature when relevant
+48,48,Opinion as to existence of right or custom when relevant
+49,49,Opinion as to usages tenets etc when relevant
+50,50,Opinion on relationship when relevant
+51,51,Grounds of opinion when relevant
+52,52,In civil cases character to prove conduct imputed irrelevant
+53,53,In criminal cases previous good character relevant
+53A,53A,Evidence of character or previous sexual experience not relevant in certain cases
+54,54,Previous bad character not relevant except in reply
+55,55,Character as affecting damages
+56,56,Fact judicially noticeable need not be proved
+57,57,Facts of which Court must take judicial notice
+58,58,Facts admitted need not be proved
+59,59,Proof of facts by oral evidence
+60,60,Oral evidence must be direct
+61,61,Proof of contents of documents
+62,62,Primary evidence
+63,63,Secondary evidence
+64,64,Proof of documents by primary evidence
+65,65,Cases in which secondary evidence relating to documents may be given
+65A,65A,Special provisions as to evidence relating to electronic record
+65B,65B,Admissibility of electronic records
+66,66,Rules as to notice to produce
+67,67,Proof of signature and handwriting of person alleged to have signed or written document produced
+67A,67A,Proof as to electronic signature
+68,68,Proof of execution of document required by law to be attested
+69,69,Proof where no attesting witness found
+70,70,Admission of execution by party to attested document
+71,71,Proof when attesting witness denies the execution
+72,72,Proof of document not required by law to be attested
+73,73,Comparison of signature writing or seal with others admitted or proved
+73A,73A,Proof as to verification of digital signature
+74,74,Public documents
+75,75,Private documents
+76,76,Certified copies of public documents
+77,77,Proof of documents by production of certified copies
+78,78,Proof of other official documents
+79,79,Presumption as to genuineness of certified copies
+80,80,Presumption as to documents produced as record of evidence
+81,81,Presumption as to Gazettes Newspapers Government documents
+81A,81A,Presumption as to Gazettes in electronic forms
+82,82,Presumption as to document admissible in England without proof of seal or signature
+83,83,Presumption as to maps or plans made by authority of Government
+84,84,Presumption as to collections of laws and reports of decisions
+85,85,Presumption as to powers of attorney
+85A,85A,Presumption as to electronic agreements
+85B,85B,Presumption as to electronic records and electronic signatures
+85C,85C,Presumption as to Electronic Signature Certificates
+86,86,Presumption as to certified copies of foreign judicial records
+87,87,Presumption as to books maps and charts
+88,88,Presumption as to telegraphic messages
+88A,88A,Presumption as to electronic messages
+89,89,Presumption as to due execution etc of documents not produced
+90,90,Presumption as to documents thirty years old
+90A,90A,Presumption as to electronic records five years old
+91,91,Evidence of terms of contracts grants and other dispositions of property reduced to form of document
+92,92,Exclusion of evidence of oral agreement
+93,93,Exclusion of evidence to explain or amend ambiguous document
+94,94,Exclusion of evidence against application of document to existing facts
+95,95,Evidence as to document unmeaning in reference to existing facts
+96,96,Evidence as to application of language which can apply to one only of several persons
+97,97,Evidence as to application of language to one of two sets of facts to neither of which the whole correctly applies
+98,98,Evidence as to meaning of illegible characters etc
+99,99,Who may give evidence of agreement varying terms of document
+100,100,Saving of provisions of Indian Succession Act relating to wills
+101,101,Burden of proof
+102,102,On whom burden of proof lies
+103,103,Burden of proof as to particular fact
+104,104,Burden of proving fact to be proved to make evidence admissible
+105,105,Burden of proving that case of accused comes within exceptions
+106,106,Burden of proving fact especially within knowledge
+107,107,Burden of proving death of person known to have been alive within thirty years
+108,108,Burden of proving that person is alive who has not been heard of for seven years
+109,109,Burden of proof as to relationship in the cases of partners landlord and tenant principal and agent
+110,110,Burden of proof as to ownership
+111,111,Proof of good faith in transactions where one party is in relation of active confidence
+111A,111A,Presumption as to certain offences
+112,112,Birth during marriage conclusive proof of legitimacy
+113,113,Proof of cession of territory
+113A,113A,Presumption as to abetment of suicide by a married woman
+113B,113B,Presumption as to dowry death
+114,114,Court may presume existence of certain facts
+114A,114A,Presumption as to absence of consent in certain prosecution for rape
+115,115,Estoppel
+116,116,Estoppel of tenant and of licensee of person in possession
+117,117,Estoppel of acceptor of bill of exchange bailee or licensee
+118,118,Who may testify
+119,119,Dumb witnesses
+120,120,Parties to civil suit and their wives or husbands — Accused in criminal proceedings
+121,121,Judges and Magistrates
+122,122,Communications during marriage
+123,123,Evidence as to affairs of State
+124,124,Official communications
+125,125,Information as to commission of offences
+126,126,Professional communications
+127,127,Section 126 to apply to interpreters etc
+128,128,Privilege not waived by volunteering evidence
+129,129,Confidential communications with legal advisers
+130,130,Production of title-deeds of witness not a party
+131,131,Production of documents or electronic records which another person having possession could refuse to produce
+132,132,Witness not excused from answering on ground that answer will criminate
+133,133,Accomplice
+134,134,Number of witnesses
+135,135,Order of production and examination of witnesses
+136,136,Judge to decide as to admissibility of evidence
+137,137,Examination-in-chief
+138,138,Order of examinations
+139,139,Cross-examination of person called to produce a document
+140,140,Witnesses to character
+141,141,Leading questions
+142,142,When they must not be asked
+143,143,When they may be asked
+144,144,Evidence as to matters in writing
+145,145,Cross-examination as to previous statements in writing
+146,146,Questions lawful in cross-examination
+147,147,When witness to be compelled to answer
+148,148,Court to decide when question shall be asked and when witness compelled to answer
+149,149,Question not to be asked without reasonable grounds
+150,150,Procedure of Court in case of question being asked without reasonable grounds
+151,151,Indecent and scandalous questions
+152,152,Questions intended to insult or annoy
+153,153,Exclusion of evidence to contradict answers to questions testing veracity
+154,154,Question by party to his own witness
+155,155,Impeaching credit of witness
+156,156,Questions tending to corroborate evidence of relevant fact admissible
+157,157,Former statements of witness may be proved to corroborate later testimony as to same fact
+158,158,What matters may be proved in connection with proved statement relevant under section 32 or 33
+159,159,Refreshing memory
+160,160,Testimony to facts stated in document mentioned in section 159
+161,161,Right of adverse party as to writing used to refresh memory
+162,162,Production of documents
+163,163,Giving as evidence of document called for and produced on notice
+164,164,Using as evidence of document production of which was refused on notice
+165,165,Judge's power to put questions or order production
+166,166,Power of jury or assessors to put questions
+167,167,No new trial for improper admission or rejection of evidence
