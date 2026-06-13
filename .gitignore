@@ -19,6 +19,7 @@ wandb/
 CLAUDE.md
 handoffs/
 docs/HANDOFF_PROTOCOL.md
+docs/project_commands.md
 SUPERCOMPUTER_BRIEF.md
 
 # build artifacts
