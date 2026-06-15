@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -N nyaya-vllm
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=12:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/vllm_serve.log
+
+# Proxy needed on CHAMP to reach the internet
+export http_proxy=http://14.139.134.20:3128
+export https_proxy=http://14.139.134.20:3128
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+
+cd $REPO
+
+# Activate virtual environment
+source .venv/bin/activate
+
+echo "=== GPU info ==="
+nvidia-smi
+
+echo "=== Starting vLLM server ==="
+echo "Model: Qwen/Qwen2.5-14B-Instruct"
+echo "Port: 8000"
+
+# Serve the model — stays running until walltime or job is killed
+# --max-model-len 8192  : context window (14B fits comfortably on A100 80GB)
+# --gpu-memory-utilization 0.85 : leave 15% headroom for KV cache growth
+vllm serve Qwen/Qwen2.5-14B-Instruct \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.85 \
+    --dtype bfloat16
+
+# Note: model weights (~28 GB) are downloaded to HuggingFace cache on first run.
+# Subsequent runs load from cache — much faster.

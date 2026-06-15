@@ -25,8 +25,7 @@ dev = [
 ]
 # install torch FIRST with the CUDA index (see docs/SETUP_A100.md), then this group
 rag = [
-    "sentence-transformers>=3.0",
-    "FlagEmbedding>=1.2",
+    "sentence-transformers==3.0.1",   # 5.x crashes on Windows Python 3.12 + CUDA
     "qdrant-client>=1.9",
     "rank-bm25>=0.2",
     "fastapi>=0.111",
