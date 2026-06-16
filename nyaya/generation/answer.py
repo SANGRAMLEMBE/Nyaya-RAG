@@ -21,6 +21,8 @@ import logging
 import re
 from dataclasses import dataclass, field
 
+import httpx
+
 from nyaya.config import settings
 from nyaya.schema import Chunk
 
@@ -71,17 +73,9 @@ class LegalAnswerer:
     """Wraps the local vLLM server for legal Q&A."""
 
     def __init__(self, model: str | None = None, base_url: str | None = None) -> None:
-        try:
-            from openai import OpenAI
-        except ImportError:
-            raise ImportError("Run: pip install openai")
-
         self._model = model or settings.generation_model
-        self._client = OpenAI(
-            base_url=base_url or settings.llm_base_url,
-            api_key="local",  # vLLM doesn't check the key, but client requires one
-        )
-        log.info("LegalAnswerer pointing at %s (model=%s)", settings.llm_base_url, self._model)
+        self._base_url = (base_url or settings.llm_base_url).rstrip("/")
+        log.info("LegalAnswerer pointing at %s (model=%s)", self._base_url, self._model)
 
     def answer(
         self,
@@ -111,29 +105,35 @@ class LegalAnswerer:
         log.info("calling vLLM: model=%s, chunks=%d, question=%r", self._model, len(chunks), question[:60])
 
         try:
-            response = self._client.chat.completions.create(
-                model=self._model,
-                messages=[
-                    {"role": "system", "content": _SYSTEM_PROMPT},
-                    {"role": "user", "content": user_message},
-                ],
-                max_tokens=max_tokens,
-                temperature=temperature,
+            http_resp = httpx.post(
+                f"{self._base_url}/chat/completions",
+                json={
+                    "model": self._model,
+                    "messages": [
+                        {"role": "system", "content": _SYSTEM_PROMPT},
+                        {"role": "user", "content": user_message},
+                    ],
+                    "max_tokens": max_tokens,
+                    "temperature": temperature,
+                },
+                timeout=120.0,
             )
+            http_resp.raise_for_status()
+            data = http_resp.json()
         except Exception as exc:
             log.error("vLLM call failed: %s", exc)
             return AnswerResult(
                 answer=f"LLM unavailable ({exc}). The retrieved sections are:\n\n{context}"
             )
 
-        answer_text = response.choices[0].message.content or ""
-        usage = response.usage
+        answer_text = data["choices"][0]["message"]["content"] or ""
+        usage = data.get("usage", {})
 
         return AnswerResult(
             answer=answer_text,
             citations=_extract_citations(answer_text),
             chunks_used=[c.id for c in chunks],
-            model=response.model,
-            prompt_tokens=usage.prompt_tokens if usage else 0,
-            completion_tokens=usage.completion_tokens if usage else 0,
+            model=data.get("model", self._model),
+            prompt_tokens=usage.get("prompt_tokens", 0),
+            completion_tokens=usage.get("completion_tokens", 0),
         )
