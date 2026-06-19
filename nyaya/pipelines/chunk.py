@@ -40,9 +40,9 @@ def _windows(text: str, target: int = TARGET_CHARS, overlap: int = OVERLAP_CHARS
 
     # Guard against pathologically large sections (bad PDF extraction artefacts).
     # 200 KB of text in one section is impossible in a real statute — truncate it.
-    MAX_SECTION_CHARS = 200_000
-    if len(text) > MAX_SECTION_CHARS:
-        text = text[:MAX_SECTION_CHARS]
+    max_section_chars = 200_000
+    if len(text) > max_section_chars:
+        text = text[:max_section_chars]
 
     # Try paragraph-level splits first
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
@@ -101,7 +101,10 @@ def chunk_document(interim_path: Path, catalog_entry: object) -> list[Chunk]:
         try:
             windows = _windows(text)
         except (MemoryError, Exception) as exc:
-            log.warning("[%s] s%s: windowing failed (%s) — skipping section", doc_id, section_num, exc)
+            log.warning(
+                "[%s] s%s: windowing failed (%s) — skipping section",
+                doc_id, section_num, exc,
+            )
             continue
         for w_idx, window in enumerate(windows):
             chunk_id = (

@@ -64,7 +64,7 @@ def _embed(
     if start_from > 0 and checkpoint_path.exists():
         import pickle
         with checkpoint_path.open("rb") as fh:
-            all_vecs = pickle.load(fh)
+            all_vecs = pickle.load(fh)  # noqa: S301 — our own checkpoint, trusted input
         log.info("resumed from checkpoint: %d vectors already done", len(all_vecs))
 
     for i in range(start_from, len(texts), batch_size):
@@ -122,7 +122,9 @@ def build_qdrant(
             log.info("dropping existing collection %s", collection)
             client.delete_collection(collection)
         else:
-            log.info("collection %s already exists — upserting (use --reset to recreate)", collection)
+            log.info(
+                "collection %s already exists — upserting (use --reset to recreate)", collection
+            )
 
     if collection not in existing or reset:
         client.create_collection(
@@ -147,7 +149,7 @@ def build_qdrant(
                 "text": chunk.text,
             },
         )
-        for chunk, vec in zip(chunks, vectors)
+        for chunk, vec in zip(chunks, vectors, strict=True)
     ]
 
     batch = 256
@@ -215,7 +217,7 @@ def main(argv: list[str] | None = None) -> int:
     if checkpoint_path.exists() and not args.reset:
         import pickle
         with checkpoint_path.open("rb") as fh:
-            existing = pickle.load(fh)
+            existing = pickle.load(fh)  # noqa: S301 — our own checkpoint, trusted input
         start_from = len(existing)
         log.info("checkpoint found: resuming from chunk %d / %d", start_from, len(texts))
 

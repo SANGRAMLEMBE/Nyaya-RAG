@@ -1,14 +1,10 @@
 """Tests for the chunking pipeline — no GPU, no file I/O needed."""
 
 import json
-import tempfile
 from pathlib import Path
-
-import pytest
 
 from nyaya.pipelines.chunk import _windows, chunk_document
 from nyaya.schema import Era, Subject
-
 
 # --- _windows unit tests -----------------------------------------------------
 

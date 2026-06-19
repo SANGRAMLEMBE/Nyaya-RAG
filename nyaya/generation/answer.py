@@ -102,7 +102,10 @@ class LegalAnswerer:
         context = _format_context(chunks)
         user_message = f"STATUTE SECTIONS:\n{context}\n\nQUESTION: {question}"
 
-        log.info("calling vLLM: model=%s, chunks=%d, question=%r", self._model, len(chunks), question[:60])
+        log.info(
+            "calling vLLM: model=%s, chunks=%d, question=%r",
+            self._model, len(chunks), question[:60],
+        )
 
         try:
             http_resp = httpx.post(

@@ -62,7 +62,7 @@ class HybridRetriever:
 
         bm25_file = bm25_path or (settings.processed_dir / "bm25.pkl")
         with bm25_file.open("rb") as fh:
-            data = pickle.load(fh)
+            data = pickle.load(fh)  # noqa: S301 — our own BM25 index, trusted input
         self._bm25 = data["bm25"]
         self._bm25_ids: list[str] = data["chunk_ids"]
         log.info("retriever ready (%d BM25 docs)", len(self._bm25_ids))
@@ -90,7 +90,7 @@ class HybridRetriever:
         self, query_vec: list[float], top_k: int, era_values: list[str] | None
     ) -> list[str]:
         """Return ordered list of chunk_ids from Qdrant dense search."""
-        from qdrant_client.models import Filter, FieldCondition, MatchAny
+        from qdrant_client.models import FieldCondition, Filter, MatchAny
 
         query_filter = None
         if era_values:
@@ -149,7 +149,6 @@ class HybridRetriever:
 
     def _fetch_chunks(self, chunk_ids: list[str]) -> list[Chunk]:
         """Retrieve full Chunk objects from Qdrant payloads."""
-        from qdrant_client.models import Filter, FieldCondition, MatchAny
         import uuid
 
         uuids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, cid)) for cid in chunk_ids]
