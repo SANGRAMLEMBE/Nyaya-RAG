@@ -1,0 +1,29 @@
+# Nyaya-RAG gold evaluation set. One JSON object per line (GoldQuestion).
+# 'relevant' lists section keys '<doc_id>:<section>' that correctly answer the
+# question. Validated against the corpus by nyaya/eval/gold.py. Lines starting
+# with '#' are comments. Seed batch — legal correctness pending human review.
+{"id": "gold_001", "question": "What is the punishment for murder under the Bharatiya Nyaya Sanhita?", "era": "new_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["bns_2023:103"], "note": "seed"}
+{"id": "gold_002", "question": "How does the BNS punish culpable homicide not amounting to murder?", "era": "new_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["bns_2023:105"], "note": "seed"}
+{"id": "gold_003", "question": "What does the BNS say about attempt to murder?", "era": "new_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["bns_2023:109"], "note": "seed"}
+{"id": "gold_004", "question": "How is theft defined under the new criminal code?", "era": "new_code", "subject": "criminal", "qtype": "definition", "relevant": ["bns_2023:303"], "note": "seed"}
+{"id": "gold_005", "question": "What is the offence of snatching under the BNS?", "era": "new_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["bns_2023:304"], "note": "seed"}
+{"id": "gold_006", "question": "What is the punishment for theft in a dwelling house or means of transport under the BNS?", "era": "new_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["bns_2023:305"], "note": "seed"}
+{"id": "gold_007", "question": "What is the punishment for murder under the Indian Penal Code?", "era": "old_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["ipc_1860:302"], "note": "seed"}
+{"id": "gold_008", "question": "How does the IPC punish culpable homicide not amounting to murder?", "era": "old_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["ipc_1860:304"], "note": "seed"}
+{"id": "gold_009", "question": "What does the IPC provide for attempt to murder?", "era": "old_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["ipc_1860:307"], "note": "seed"}
+{"id": "gold_010", "question": "What is the punishment for criminal conspiracy under the IPC?", "era": "old_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["ipc_1860:120B"], "note": "seed"}
+{"id": "gold_011", "question": "What is the punishment for murder committed by a person under sentence of imprisonment for life under the IPC?", "era": "old_code", "subject": "criminal", "qtype": "section_lookup", "relevant": ["ipc_1860:303"], "note": "seed"}
+{"id": "gold_012", "question": "How is an order of maintenance enforced under the Code of Criminal Procedure?", "era": "old_code", "subject": "criminal_procedure", "qtype": "procedure", "relevant": ["crpc_1973:128"], "note": "seed"}
+{"id": "gold_013", "question": "Can a magistrate prohibit the repetition or continuance of a public nuisance under the CrPC?", "era": "old_code", "subject": "criminal_procedure", "qtype": "procedure", "relevant": ["crpc_1973:143"], "note": "seed"}
+{"id": "gold_014", "question": "Under the Indian Evidence Act, what facts may evidence be given of?", "era": "old_code", "subject": "evidence", "qtype": "section_lookup", "relevant": ["iea_1872:5"], "note": "seed"}
+{"id": "gold_015", "question": "What is the definition of consumer-related terms under the Consumer Protection Act, 2019?", "era": "neutral", "subject": "consumer", "qtype": "definition", "relevant": ["cpa_2019:2"], "note": "seed"}
+{"id": "gold_016", "question": "What is the Central Consumer Protection Council under the Consumer Protection Act, 2019?", "era": "neutral", "subject": "consumer", "qtype": "section_lookup", "relevant": ["cpa_2019:3"], "note": "seed"}
+{"id": "gold_017", "question": "Are contracts formed through electronic means valid under the Information Technology Act?", "era": "neutral", "subject": "cyber", "qtype": "section_lookup", "relevant": ["it_act_2000:10A"], "note": "seed"}
+{"id": "gold_018", "question": "What is the punishment for publishing or transmitting material depicting children in sexually explicit acts under the IT Act?", "era": "neutral", "subject": "cyber", "qtype": "section_lookup", "relevant": ["it_act_2000:67B"], "note": "seed"}
+{"id": "gold_019", "question": "What power does the government have to issue directions for interception or monitoring under the IT Act?", "era": "neutral", "subject": "cyber", "qtype": "section_lookup", "relevant": ["it_act_2000:69"], "note": "seed"}
+{"id": "gold_020", "question": "What are the obligations of public authorities under the Right to Information Act?", "era": "neutral", "subject": "transparency", "qtype": "section_lookup", "relevant": ["rti_2005:4"], "note": "seed"}
+{"id": "gold_021", "question": "How can a Chief Information Commissioner be removed under the RTI Act?", "era": "neutral", "subject": "transparency", "qtype": "procedure", "relevant": ["rti_2005:14"], "note": "seed"}
+{"id": "gold_022", "question": "To whom does the Hindu Marriage Act, 1955 apply?", "era": "neutral", "subject": "family", "qtype": "section_lookup", "relevant": ["hma_1955:2"], "note": "seed"}
+{"id": "gold_023", "question": "How are decrees and orders enforced under the Hindu Marriage Act?", "era": "neutral", "subject": "family", "qtype": "procedure", "relevant": ["hma_1955:28A"], "note": "seed"}
+{"id": "gold_024", "question": "What is the penalty for travelling without a pass or ticket under the Motor Vehicles Act?", "era": "neutral", "subject": "transport", "qtype": "section_lookup", "relevant": ["mva_1988:178"], "note": "seed"}
+{"id": "gold_025", "question": "What presumptions apply to negotiable instruments under the Negotiable Instruments Act?", "era": "neutral", "subject": "financial", "qtype": "section_lookup", "relevant": ["ni_act_1881:118"], "note": "seed"}
