@@ -1,0 +1,52 @@
+#!/bin/bash
+#PBS -N nyaya-anseval
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=02:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/answer_eval.log
+
+# Self-contained answer-quality eval: launches vLLM on THIS GPU node, waits for
+# it, runs the full-pipeline eval over the gold set (talks to vLLM over
+# localhost), writes RESULTS.md section 2, then stops vLLM. No cross-node
+# networking, no SSH tunnel.
+
+export HF_HUB_OFFLINE=1
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+export NYAYA_LLM_BASE_URL=http://localhost:8000/v1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+echo "=== launching vLLM in background ==="
+vllm serve Qwen/Qwen2.5-14B-Instruct \
+    --host 0.0.0.0 --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.80 \
+    --dtype bfloat16 > $SCRATCH/logs/vllm_eval.log 2>&1 &
+VLLM_PID=$!
+
+echo "=== waiting for vLLM to be ready (up to ~20 min) ==="
+READY=0
+for i in $(seq 1 120); do
+    if curl -s http://localhost:8000/v1/models > /dev/null 2>&1; then
+        echo "vLLM ready after ~$((i*10))s"; READY=1; break
+    fi
+    sleep 10
+done
+if [ "$READY" -ne 1 ]; then
+    echo "vLLM did not become ready — aborting"; kill $VLLM_PID 2>/dev/null; exit 1
+fi
+
+echo "=== running answer-quality eval over the gold set ==="
+python -m nyaya.eval.run_answer_eval
+
+echo "=== RESULTS.md section 2 ==="
+sed -n '/## 2\./,/## 3\./p' RESULTS.md
+
+echo "=== stopping vLLM ==="
+kill $VLLM_PID 2>/dev/null
