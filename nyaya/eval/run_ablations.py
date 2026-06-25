@@ -19,7 +19,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from nyaya.config import settings
 from nyaya.eval.gold import GoldQuestion, load_gold
 from nyaya.eval.metrics import aggregate
 from nyaya.schema import Chunk
