@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -N nyaya-ablation
+#PBS -l select=1:ncpus=8:mem=32gb:ngpus=1
+#PBS -l walltime=00:30:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/ablation.log
+
+# Retrieval ablation over the 150-q gold set -> writes RESULTS.md section 1.
+# Needs Qdrant + bge-m3 (GPU); no internet (model is cached) and no vLLM.
+export HF_HUB_OFFLINE=1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+echo "=== GPU ==="
+nvidia-smi --query-gpu=name,memory.used --format=csv
+
+echo "=== running retrieval ablation over the gold set ==="
+python -m nyaya.eval.run_ablations
+
+echo "=== RESULTS.md (section 1) ==="
+sed -n '1,18p' RESULTS.md

@@ -102,15 +102,23 @@ def _write_results(results: dict[str, dict[str, float]], n: int) -> None:
     block = f"## 1. Retrieval ablation (gold set, n={n})\n" + "\n".join(rows) + "\n"
 
     path = Path("RESULTS.md")
+    if not path.exists():
+        path.write_text("# Results\n\n" + block, encoding="utf-8")
+        print(f"RESULTS.md created (n={n}).")
+        return
+
     text = path.read_text(encoding="utf-8")
-    # replace from the section-1 header up to (but not including) the next '## '
-    new = re.sub(
-        r"## 1\. Retrieval ablation.*?(?=\n## )",
-        block + "\n",
-        text,
-        count=1,
-        flags=re.DOTALL,
-    )
+    if re.search(r"## 1\. Retrieval ablation", text):
+        # replace from the section-1 header up to (but not including) the next '## '
+        new = re.sub(
+            r"## 1\. Retrieval ablation.*?(?=\n## )",
+            block + "\n",
+            text,
+            count=1,
+            flags=re.DOTALL,
+        )
+    else:
+        new = text.rstrip() + "\n\n" + block
     path.write_text(new, encoding="utf-8")
     print(f"RESULTS.md updated (n={n}).")
 
