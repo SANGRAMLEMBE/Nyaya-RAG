@@ -25,9 +25,24 @@ Qwen2.5-14B-Instruct (local vLLM) → **citation verifier** → answer with
 verified citations + disclaimer.
 
 ## Results
-See [RESULTS.md](RESULTS.md) — retrieval ablations (recall@k, MRR, nDCG),
-citation precision, pre/post-verifier hallucination rate, red-team outcomes.
-*(Populated during eval, Days 5–7.)*
+Evaluated on a **150-question gold set** (13 subjects, both eras), where every
+answer key is grounded in a real corpus section (auto-validated — no fabricated
+citations).
+
+**Retrieval** (recall@k / MRR / nDCG@10 over the gold set):
+
+| Config | recall@5 | recall@10 | MRR | nDCG@10 |
+|---|---|---|---|---|
+| **dense (bge-m3)** | **0.993** | **1.000** | **0.920** | **0.940** |
+| BM25 | 0.727 | 0.800 | 0.608 | 0.654 |
+| hybrid (RRF) | 0.873 | 0.953 | 0.755 | 0.803 |
+
+On this gold set the dense encoder alone is strongest; RRF fusion with lexical
+BM25 lowers ranking quality (a documented ablation finding).
+
+See [RESULTS.md](RESULTS.md) for the full tables — retrieval ablations,
+citation precision and pre/post-verifier hallucination rate, era-correctness,
+and red-team outcomes.
 
 ## Reproduce
 See [docs/SETUP_A100.md](docs/SETUP_A100.md), then:
