@@ -5,7 +5,7 @@ Each gold question names the section(s) that correctly answer it, keyed by
 chunk id — so it is robust to section windowing (``bns_2023:s303w0`` etc.).
 
 The set is built ONLY from sections that exist in the corpus; ``validate_gold``
-enforces this so no fabricated citation can slip in (CLAUDE.md / ADR-005).
+enforces this so no fabricated citation can slip in (ADR-005).
 Public per ADR-007 (the gold eval set ships in the repo for research credibility).
 
 Usage::
