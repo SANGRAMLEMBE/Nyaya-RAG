@@ -17,13 +17,21 @@ questions are semantic paraphrases of section headings, which the dense encoder
 captures well, while lexical BM25 introduces lower-ranked noise that RRF mixes
 in. Reranking (pending) and the naive baseline are still to be run.
 
-## 2. End-to-end answer quality
+## 2. End-to-end answer quality (gold set, n=150)
 | Metric | pre-verifier | post-verifier |
 |---|---|---|
-| citation precision | – | – |
-| hallucinated-citation rate | – | – |
+| citation precision | 0.683 | 1.000 |
+| hallucinated-citation rate | 0.317 | 0.000 |
 | faithfulness (local judge) | – | – |
-| era-correctness (criminal subset) | – | – |
+| era-correctness (criminal subset) | 1.000 | 1.000 |
+
+**Headline:** across 150 questions the base model (Qwen2.5-14B) emitted 82
+citations, of which **31.7% were hallucinated** (section numbers absent from
+the corpus). The post-generation verifier (ADR-005) stripped every
+unverifiable citation, taking the hallucinated-citation rate to **0%** and
+citation precision to **1.000**. Era-correctness on the criminal subset is
+**perfect (1.000)** — the era filter never admitted a wrong-era citation.
+Faithfulness via the local judge model is a later pass.
 
 ## 3. Red-team (n=25)
 | Category | pass rate |

@@ -40,6 +40,13 @@ citations).
 On this gold set the dense encoder alone is strongest; RRF fusion with lexical
 BM25 lowers ranking quality (a documented ablation finding).
 
+**Citation verification (the headline):** across the 150 questions the base
+model (Qwen2.5-14B) emitted 82 citations, **31.7% of them hallucinated**
+(section numbers absent from the corpus). The post-generation verifier stripped
+every unverifiable citation → **0% hallucinated-citation rate**, citation
+precision **1.000**, and **perfect era-correctness (1.000)** on the criminal
+subset.
+
 See [RESULTS.md](RESULTS.md) for the full tables — retrieval ablations,
 citation precision and pre/post-verifier hallucination rate, era-correctness,
 and red-team outcomes.
