@@ -26,3 +26,15 @@ SUPERCOMPUTER_BRIEF.md
 
 # build artifacts
 *.egg-info/
+
+# OS / editor junk (keep the public repo clean)
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+
+# local secrets / streamlit
+.streamlit/secrets.toml
