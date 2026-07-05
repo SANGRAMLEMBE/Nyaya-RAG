@@ -15,7 +15,6 @@ On CHAMP (after vLLM is running on port 8000):
 from __future__ import annotations
 
 import logging
-import re
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -23,7 +22,6 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from nyaya.config import settings
-from nyaya.schema import Era
 
 log = logging.getLogger("nyaya.api")
 
@@ -60,6 +58,8 @@ class VerificationOut(BaseModel):
 class QueryResponse(BaseModel):
     question: str
     era_used: str | None
+    era_source: str  # 'explicit' | 'keyword' | 'default' — why this era
+    qtype: str  # routed intent: section | rights | procedure | case | general
     answer: str  # verified answer — unverifiable citations stripped (ADR-005)
     citations: list[str]  # only citations that passed verification
     verification: VerificationOut
@@ -69,29 +69,8 @@ class QueryResponse(BaseModel):
     completion_tokens: int
 
 
-# --- era auto-detection -------------------------------------------------------
-
-_OLD_KEYWORDS = re.compile(
-    r"\b(ipc|crpc|iea|indian penal code|criminal procedure|evidence act"
-    r"|before\s+2024|before\s+july|pre.?2024|old\s+law|old\s+code)\b",
-    re.IGNORECASE,
-)
-_NEW_KEYWORDS = re.compile(
-    r"\b(bns|bnss|bsa|bharatiya|after\s+2024|after\s+july|post.?2024"
-    r"|new\s+law|new\s+code)\b",
-    re.IGNORECASE,
-)
-
-
-def _detect_era(question: str, explicit: str | None) -> str | None:
-    if explicit:
-        return explicit
-    if _OLD_KEYWORDS.search(question):
-        return Era.OLD_CODE.value
-    if _NEW_KEYWORDS.search(question):
-        return Era.NEW_CODE.value
-    return Era.NEW_CODE.value  # default to current law
-
+# Era detection + intent classification live in nyaya.retrieval.router — the
+# single source of truth for routing (PLAN M2, ADR-003).
 
 # --- app lifecycle ------------------------------------------------------------
 
@@ -146,8 +125,15 @@ def query(req: QueryRequest) -> QueryResponse:
     if _retriever is None or _answerer is None or _verifier is None:
         raise HTTPException(status_code=503, detail="retriever not ready")
 
-    era_used = _detect_era(req.question, req.era)
-    log.info("query: era=%s q=%r", era_used, req.question[:80])
+    from nyaya.retrieval.router import route
+
+    decision = route(req.question, req.era)
+    era_used = decision.era.value
+    log.info(
+        "query: qtype=%s era=%s(%s) sections=%s q=%r",
+        decision.qtype.value, era_used, decision.era_source,
+        decision.sections, req.question[:80],
+    )
 
     chunks = _retriever.retrieve(req.question, era=era_used, final_k=req.top_k)
     result = _answerer.answer(req.question, chunks)
@@ -166,6 +152,8 @@ def query(req: QueryRequest) -> QueryResponse:
     return QueryResponse(
         question=req.question,
         era_used=era_used,
+        era_source=decision.era_source,
+        qtype=decision.qtype.value,
         answer=verdict.clean_answer,
         citations=[c.raw for c in verdict.citations if c.verified],
         verification=VerificationOut(

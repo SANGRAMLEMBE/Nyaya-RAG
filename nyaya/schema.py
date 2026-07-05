@@ -53,6 +53,33 @@ class Subject(StrEnum):
     LEGAL_AID = "legal_aid"
 
 
+class QueryType(StrEnum):
+    """User-intent classes the query router assigns (PLAN M2, ADR-003).
+
+    Drives index selection (statutes now, judgments in M2) and answer style.
+    """
+
+    SECTION = "section"  # asks about a specific statutory section
+    RIGHTS = "rights"  # asks what the user is entitled to / protected from
+    PROCEDURE = "procedure"  # asks how to do something (file, appeal, apply)
+    CASE = "case"  # asks about judgments / case law (served fully in M2)
+    GENERAL = "general"  # none of the above — plain hybrid retrieval
+
+
+class RouteDecision(BaseModel):
+    """Deterministic routing verdict for one query — explainable by design."""
+
+    qtype: QueryType
+    era: Era  # resolved era for the retrieval filter
+    era_source: str = Field(
+        description="how the era was chosen: 'explicit' | 'keyword' | 'default'"
+    )
+    sections: list[str] = Field(
+        default_factory=list,
+        description="section/article numbers named in the query, e.g. ['302', '120B']",
+    )
+
+
 class CatalogEntry(BaseModel):
     """One row of configs/acts_catalog.yaml — a document we intend to fetch."""
 
