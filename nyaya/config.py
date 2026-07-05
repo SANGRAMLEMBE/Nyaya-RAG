@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     generation_model: str = "Qwen/Qwen2.5-14B-Instruct"
     judge_model: str = "Qwen/Qwen2.5-32B-Instruct-AWQ"  # only used during eval
+    # synthetic-data generator — 14B is already cached on CHAMP; bump to the
+    # 32B-AWQ (per PLAN week 5) once it is downloaded there
+    synth_model: str = "Qwen/Qwen2.5-14B-Instruct"
     # openai client is just used as the wire protocol to talk to our local vLLM server
     llm_base_url: str = "http://127.0.0.1:8000/v1"
 

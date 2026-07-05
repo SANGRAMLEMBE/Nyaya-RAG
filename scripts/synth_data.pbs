@@ -1,0 +1,53 @@
+#!/bin/bash
+#PBS -N nyaya-synth
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=12:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/synth_data.log
+
+# Synthetic SFT data generation (PLAN week 5). Self-contained: launches vLLM
+# on THIS node, waits, generates verifier-gated QA pairs over localhost,
+# stops vLLM. Appends + resumes — safe to resubmit after a walltime kill;
+# it skips chunks already in the output file.
+
+export HF_HUB_OFFLINE=1
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+export NYAYA_LLM_BASE_URL=http://localhost:8000/v1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+MODEL=$(python -c "from nyaya.config import settings; print(settings.synth_model)")
+echo "=== launching vLLM ($MODEL) in background ==="
+vllm serve "$MODEL" \
+    --host 0.0.0.0 --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.85 \
+    --dtype bfloat16 > $SCRATCH/logs/vllm_synth.log 2>&1 &
+VLLM_PID=$!
+
+echo "=== waiting for vLLM (up to ~20 min) ==="
+READY=0
+for i in $(seq 1 120); do
+    if curl -s http://localhost:8000/v1/models > /dev/null 2>&1; then
+        echo "vLLM ready after ~$((i*10))s"; READY=1; break
+    fi
+    sleep 10
+done
+if [ "$READY" -ne 1 ]; then
+    echo "vLLM did not become ready — aborting"; kill $VLLM_PID 2>/dev/null; exit 1
+fi
+
+echo "=== generating synthetic SFT pairs (resumable) ==="
+python -m nyaya.pipelines.synth --per-chunk 4 --out data/synthetic/sft_pairs.jsonl
+
+echo "=== output size ==="
+wc -l data/synthetic/sft_pairs.jsonl
+
+echo "=== stopping vLLM ==="
+kill $VLLM_PID 2>/dev/null

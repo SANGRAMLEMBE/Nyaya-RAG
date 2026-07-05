@@ -5,6 +5,7 @@ __pycache__/
 data/raw/*
 data/interim/*
 data/processed/*
+data/synthetic/
 data/qdrant/
 data/manifest.sqlite
 !data/*/.gitkeep
