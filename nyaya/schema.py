@@ -53,6 +53,28 @@ class Subject(StrEnum):
     LEGAL_AID = "legal_aid"
 
 
+class Judgment(BaseModel):
+    """A parsed court judgment — metadata extracted, never invented.
+
+    Every optional field is None/empty when the source text does not state it
+    (CLAUDE.md: unverifiable → flag, never fabricate). Chunk ids follow
+    '<id>:p<NNN>' per the Chunk docstring (e.g. 'sc_1973_kesavananda:p041').
+    """
+
+    id: str = Field(pattern=r"^[a-z0-9_]+$", description="e.g. 'sc_1973_kesavananda'")
+    title: str | None = None  # "Petitioner v. Respondent" as printed
+    citation: str | None = None  # reporter citation as printed, e.g. "AIR … SC …"
+    judgment_date: date | None = None
+    bench: list[str] = Field(default_factory=list)  # judge names as printed
+    paragraphs: list[str] = Field(default_factory=list)
+    held_paras: list[int] = Field(
+        default_factory=list,
+        description="indexes of paragraphs containing holding language",
+    )
+    source: str = ""
+    url: str | None = None
+
+
 class QueryType(StrEnum):
     """User-intent classes the query router assigns (PLAN M2, ADR-003).
 
