@@ -6,9 +6,10 @@ runs on CHAMP (not the laptop). The metric math lives in nyaya/eval/metrics.py
 and is unit-tested separately.
 
 Configs:
-    dense   — bge-m3 dense vectors only (Qdrant)
-    bm25    — lexical BM25 only
-    hybrid  — dense + BM25 merged with RRF (the production path)
+    dense         — bge-m3 dense vectors only (Qdrant)
+    bm25          — lexical BM25 only
+    hybrid        — dense + BM25 merged with RRF
+    hybrid_rerank — RRF pool re-scored by bge-reranker-v2-m3 (ADR-006)
 
 Usage (on CHAMP, venv active):
     python -m nyaya.eval.run_ablations
@@ -23,7 +24,7 @@ from nyaya.eval.gold import GoldQuestion, load_gold
 from nyaya.eval.metrics import aggregate
 from nyaya.schema import Chunk
 
-CONFIGS = ("dense", "bm25", "hybrid")
+CONFIGS = ("dense", "bm25", "hybrid", "hybrid_rerank")
 GOLD_PATH = "data/gold/gold_set.jsonl"
 TOP_K = 10  # retrieve depth for the ablation (recall@10 needs at least 10)
 
@@ -62,6 +63,8 @@ def predicted_keys(retriever, q: GoldQuestion, config: str, k: int) -> list[str]
         chunks = _ordered_chunks(retriever, ids)
     elif config == "hybrid":
         chunks = retriever.retrieve(q.question, era=q.era, final_k=k)
+    elif config == "hybrid_rerank":
+        chunks = retriever.retrieve(q.question, era=q.era, final_k=k, rerank=True)
     else:
         raise ValueError(f"unknown config {config!r}")
     if era_values:
@@ -86,7 +89,12 @@ def run() -> dict[str, dict[str, float]]:
     return results
 
 
-_LABELS = {"dense": "dense (bge-m3)", "bm25": "BM25", "hybrid": "hybrid (RRF)"}
+_LABELS = {
+    "dense": "dense (bge-m3)",
+    "bm25": "BM25",
+    "hybrid": "hybrid (RRF)",
+    "hybrid_rerank": "hybrid + rerank (bge-reranker-v2-m3)",
+}
 
 
 def _write_results(results: dict[str, dict[str, float]], n: int) -> None:
@@ -98,7 +106,6 @@ def _write_results(results: dict[str, dict[str, float]], n: int) -> None:
             f"| {_LABELS[cfg]} | {m['recall@5']:.3f} | {m['recall@10']:.3f} "
             f"| {m['mrr']:.3f} | {m['ndcg@10']:.3f} |"
         )
-    rows.append("| hybrid + rerank | – | – | – | – |  <!-- reranker not yet wired -->")
     block = f"## 1. Retrieval ablation (gold set, n={n})\n" + "\n".join(rows) + "\n"
 
     path = Path("RESULTS.md")

@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     dense_top_k: int = 30
     bm25_top_k: int = 30
     rerank_top_k: int = 8
+    rerank_pool_k: int = 30  # candidate pool fed to the cross-encoder reranker
     rrf_k: int = 60
 
 
