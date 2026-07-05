@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -N nyaya-dpo-harvest
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=08:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/dpo_harvest.log
+
+# DPO step 1/3: run the model over SFT-val questions and record answers +
+# citation verification. Serves the SFT adapter via vLLM LoRA when it exists;
+# falls back to the base model otherwise (base failures are valid signal too).
+# Resumable — already-answered questions are skipped on resubmit.
+
+export HF_HUB_OFFLINE=1
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+export NYAYA_LLM_BASE_URL=http://localhost:8000/v1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+BASE=$(python -c "from nyaya.config import settings; print(settings.generation_model)")
+ADAPTER=$REPO/models/sft-qwen2.5-14b/final
+LORA_ARGS=""
+if [ -d "$ADAPTER" ]; then
+    echo "=== SFT adapter found — serving it via vLLM LoRA ==="
+    LORA_ARGS="--enable-lora --lora-modules sft-qwen14b=$ADAPTER"
+    export NYAYA_GENERATION_MODEL=sft-qwen14b
+else
+    echo "=== no SFT adapter yet — harvesting failures from the base model ==="
+fi
+
+vllm serve "$BASE" \
+    --host 0.0.0.0 --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.85 \
+    --dtype bfloat16 $LORA_ARGS > $SCRATCH/logs/vllm_dpo.log 2>&1 &
+VLLM_PID=$!
+
+echo "=== waiting for vLLM ==="
+READY=0
+for i in $(seq 1 120); do
+    curl -s http://localhost:8000/v1/models > /dev/null 2>&1 && { READY=1; break; }
+    sleep 10
+done
+[ "$READY" -ne 1 ] && { echo "vLLM not ready — abort"; kill $VLLM_PID; exit 1; }
+
+echo "=== harvesting ==="
+python -m nyaya.training.dpo harvest
+
+echo "=== building preference pairs (pure step, done here for convenience) ==="
+python -m nyaya.training.dpo pairs
+
+kill $VLLM_PID 2>/dev/null

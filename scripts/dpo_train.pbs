@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N nyaya-dpo-train
+#PBS -l select=1:ncpus=8:mem=96gb:ngpus=1
+#PBS -l walltime=12:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/dpo_train.log
+
+# DPO step 3/3: preference optimization on the verifier-manufactured pairs,
+# continuing from the SFT adapter. Checkpoints every 100 steps; resubmit to
+# resume after a walltime kill. Same one-time pip pins as sft_train.pbs.
+
+export HF_HUB_OFFLINE=1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+echo "=== GPU ==="
+nvidia-smi --query-gpu=name,memory.total --format=csv
+
+echo "=== pairs available ==="
+wc -l data/synthetic/dpo_pairs.jsonl
+
+echo "=== DPO training (from SFT adapter) ==="
+python -m nyaya.training.dpo train
+
+echo "=== adapter ==="
+ls -la models/dpo-qwen2.5-14b/final 2>/dev/null || echo "(walltime hit — resubmit to resume)"
