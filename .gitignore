@@ -6,6 +6,7 @@ data/raw/*
 data/interim/*
 data/processed/*
 data/synthetic/
+models/
 data/qdrant/
 data/manifest.sqlite
 !data/*/.gitkeep

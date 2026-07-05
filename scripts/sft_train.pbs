@@ -1,0 +1,35 @@
+#!/bin/bash
+#PBS -N nyaya-sft
+#PBS -l select=1:ncpus=8:mem=96gb:ngpus=1
+#PBS -l walltime=12:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/sft_train.log
+
+# QLoRA SFT on Qwen2.5-14B (M3). Saves checkpoints every 200 steps and
+# resumes from the newest one automatically — if the 12h walltime kills the
+# job, just resubmit this script.
+#
+# One-time setup on the LOGIN node first (proxy set):
+#   pip install "trl==0.12.2" "peft==0.14.0" "bitsandbytes==0.45.0" \
+#               "datasets==3.2.0" "accelerate==1.2.1"
+
+export HF_HUB_OFFLINE=1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+echo "=== GPU ==="
+nvidia-smi --query-gpu=name,memory.total --format=csv
+
+echo "=== dataset sanity (no GPU deps) ==="
+python -m nyaya.training.sft --prepare-only
+
+echo "=== training ==="
+python -m nyaya.training.sft --pairs data/synthetic/sft_pairs.jsonl
+
+echo "=== adapter ==="
+ls -la models/sft-qwen2.5-14b/final 2>/dev/null || echo "(walltime hit — resubmit to resume)"
