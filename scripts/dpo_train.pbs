@@ -18,6 +18,12 @@ cd $REPO
 module load python/3.11
 source .venv/bin/activate
 
+# PBS on this cluster does not isolate GPUs per job — every process defaults
+# to GPU 0 even on a 4-GPU node (caused a real OOM when two jobs collided).
+# Pin this job to the GPU with the most free memory.
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits | sort -t, -k2 -n | head -1 | cut -d, -f1)
+echo "pinned to GPU $CUDA_VISIBLE_DEVICES"
+
 echo "=== GPU ==="
 nvidia-smi --query-gpu=name,memory.total --format=csv
 
