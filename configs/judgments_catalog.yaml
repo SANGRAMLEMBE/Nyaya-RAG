@@ -1,0 +1,124 @@
+# Nyaya-RAG landmark Supreme Court judgments catalog (v0.2, per ADR-002).
+#
+# HOW TO FILL: for each entry, open the judgment on e-SCR
+# (https://digiscr.sci.gov.in or https://judgments.ecourts.gov.in), find the
+# official PDF, and paste its direct https URL into `url`. Copy the reporter
+# citation as printed into `citation`. Do NOT guess URLs or citations — the
+# downloader validates content-type + PDF magic bytes and refuses entries
+# without a verified https url (same discipline as the acts catalog).
+#
+# The case titles below are real, well-known landmark cases used ONLY as a
+# starting checklist; verify each title against the official document you
+# download. Trim or extend the list as you like — ~30 is the ADR-002 target.
+#
+# subject: one of the Subject enum values (constitutional, criminal, ...).
+
+judgments:
+  - id: sc_kesavananda_1973
+    title: Kesavananda Bharati v. State of Kerala
+    subject: constitutional
+    year: 1973
+    notes: basic structure doctrine
+    url:
+  - id: sc_maneka_gandhi_1978
+    title: Maneka Gandhi v. Union of India
+    subject: constitutional
+    year: 1978
+    notes: Article 21, due process
+    url:
+  - id: sc_minerva_mills_1980
+    title: Minerva Mills Ltd. v. Union of India
+    subject: constitutional
+    year: 1980
+    notes: basic structure, limits on amending power
+    url:
+  - id: sc_sr_bommai_1994
+    title: S. R. Bommai v. Union of India
+    subject: constitutional
+    year: 1994
+    notes: Article 356, federalism
+    url:
+  - id: sc_indra_sawhney_1992
+    title: Indra Sawhney v. Union of India
+    subject: constitutional
+    year: 1992
+    notes: reservations, creamy layer
+    url:
+  - id: sc_puttaswamy_2017
+    title: K. S. Puttaswamy v. Union of India
+    subject: constitutional
+    year: 2017
+    notes: right to privacy
+    url:
+  - id: sc_shreya_singhal_2015
+    title: Shreya Singhal v. Union of India
+    subject: cyber
+    year: 2015
+    notes: struck down IT Act s.66A, free speech online
+    url:
+  - id: sc_vishaka_1997
+    title: Vishaka v. State of Rajasthan
+    subject: women_safety
+    year: 1997
+    notes: workplace sexual harassment guidelines (pre-POSH)
+    url:
+  - id: sc_shah_bano_1985
+    title: Mohd. Ahmed Khan v. Shah Bano Begum
+    subject: family
+    year: 1985
+    notes: maintenance of divorced Muslim woman
+    url:
+  - id: sc_shayara_bano_2017
+    title: Shayara Bano v. Union of India
+    subject: family
+    year: 2017
+    notes: triple talaq
+    url:
+  - id: sc_joseph_shine_2018
+    title: Joseph Shine v. Union of India
+    subject: criminal
+    year: 2018
+    notes: struck down adultery (IPC s.497)
+    url:
+  - id: sc_navtej_johar_2018
+    title: Navtej Singh Johar v. Union of India
+    subject: constitutional
+    year: 2018
+    notes: read down IPC s.377
+    url:
+  - id: sc_dk_basu_1997
+    title: D. K. Basu v. State of West Bengal
+    subject: criminal_procedure
+    year: 1997
+    notes: arrest + custody safeguards
+    url:
+  - id: sc_lalita_kumari_2013
+    title: Lalita Kumari v. Government of Uttar Pradesh
+    subject: criminal_procedure
+    year: 2013
+    notes: mandatory FIR registration for cognizable offences
+    url:
+  - id: sc_arnesh_kumar_2014
+    title: Arnesh Kumar v. State of Bihar
+    subject: criminal_procedure
+    year: 2014
+    notes: arrest guidelines, s.498A
+    url:
+  - id: sc_olga_tellis_1985
+    title: Olga Tellis v. Bombay Municipal Corporation
+    subject: constitutional
+    year: 1985
+    notes: right to livelihood under Article 21
+    url:
+  - id: sc_mc_mehta_oleum_1987
+    title: M. C. Mehta v. Union of India (Oleum Gas Leak)
+    subject: constitutional
+    year: 1987
+    notes: absolute liability
+    url:
+  - id: sc_selvi_2010
+    title: Selvi v. State of Karnataka
+    subject: evidence
+    year: 2010
+    notes: narco-analysis, Article 20(3)
+    url:

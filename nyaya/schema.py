@@ -53,6 +53,34 @@ class Subject(StrEnum):
     LEGAL_AID = "legal_aid"
 
 
+class JudgmentCatalogEntry(BaseModel):
+    """One row of configs/judgments_catalog.yaml — a judgment we intend to fetch.
+
+    Case titles are real, public case names (like act titles in the acts
+    catalog). url + citation are filled MANUALLY from the actual e-SCR
+    document — never guessed (CLAUDE.md). The downloader refuses any entry
+    without a verified https url.
+    """
+
+    id: str = Field(pattern=r"^[a-z0-9_]+$", description="slug, e.g. 'sc_kesavananda_1973'")
+    title: str = Field(description="case name as printed, 'X v. Y'")
+    subject: Subject
+    year: int | None = Field(default=None, ge=1947, le=2100)
+    source: str = "e-SCR"
+    url: str | None = Field(
+        default=None, description="direct PDF URL from e-SCR — fill manually"
+    )
+    citation: str | None = None  # reporter citation, filled from the document
+    notes: str = ""
+
+    @field_validator("url")
+    @classmethod
+    def _url_scheme(cls, v: str | None) -> str | None:
+        if v is not None and not v.startswith("https://"):
+            raise ValueError("judgment source URLs must be https")
+        return v
+
+
 class Judgment(BaseModel):
     """A parsed court judgment — metadata extracted, never invented.
 
