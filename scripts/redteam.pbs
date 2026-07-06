@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -N nyaya-redteam
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=02:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/redteam.log
+
+# Red-team eval (RESULTS.md section 3). Self-contained: vLLM up -> run the
+# adversarial prompts -> write RESULTS -> vLLM down. Point it at the SFT/DPO
+# adapter later by editing the served model, to red-team the tuned model too.
+
+export HF_HUB_OFFLINE=1
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+export NYAYA_LLM_BASE_URL=http://localhost:8000/v1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+# PBS on this cluster does not isolate GPUs per job — pin to the freest GPU.
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits | sort -t, -k2 -n | head -1 | cut -d, -f1)
+echo "pinned to GPU $CUDA_VISIBLE_DEVICES"
+
+echo "=== launching vLLM ==="
+vllm serve Qwen/Qwen2.5-14B-Instruct \
+    --host 0.0.0.0 --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.80 \
+    --dtype bfloat16 > $SCRATCH/logs/vllm_redteam.log 2>&1 &
+VLLM_PID=$!
+
+READY=0
+for i in $(seq 1 120); do
+    curl -s http://localhost:8000/v1/models > /dev/null 2>&1 && { READY=1; break; }
+    sleep 10
+done
+[ "$READY" -ne 1 ] && { echo "vLLM not ready — abort"; kill $VLLM_PID; exit 1; }
+
+echo "=== running red-team ==="
+python -m nyaya.eval.run_redteam
+
+echo "=== RESULTS.md section 3 ==="
+sed -n '/## 3\./,$p' RESULTS.md
+
+kill $VLLM_PID 2>/dev/null
