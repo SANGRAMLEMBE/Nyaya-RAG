@@ -34,6 +34,11 @@ class QueryRequest(BaseModel):
         description="'old_code', 'new_code', or null for auto-detect",
     )
     top_k: int = Field(default=8, ge=1, le=20)
+    rerank: bool = Field(
+        default=True,
+        description="cross-encoder rerank of the fused pool — the measured "
+        "best config; disable on CPU-only deployments for latency",
+    )
 
 
 class ChunkOut(BaseModel):
@@ -135,7 +140,9 @@ def query(req: QueryRequest) -> QueryResponse:
         decision.sections, req.question[:80],
     )
 
-    chunks = _retriever.retrieve(req.question, era=era_used, final_k=req.top_k)
+    chunks = _retriever.retrieve(
+        req.question, era=era_used, final_k=req.top_k, rerank=req.rerank
+    )
     result = _answerer.answer(req.question, chunks)
 
     # ADR-005: verify citations against the corpus + retrieved context, strip

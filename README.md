@@ -33,12 +33,14 @@ citations).
 
 | Config | recall@5 | recall@10 | MRR | nDCG@10 |
 |---|---|---|---|---|
-| **dense (bge-m3)** | **0.993** | **1.000** | **0.920** | **0.940** |
+| dense (bge-m3) | 0.993 | 1.000 | 0.920 | 0.940 |
 | BM25 | 0.727 | 0.800 | 0.608 | 0.654 |
 | hybrid (RRF) | 0.873 | 0.953 | 0.755 | 0.803 |
+| **hybrid + rerank (bge-reranker-v2-m3)** | **0.993** | **1.000** | **0.933** | **0.950** |
 
-On this gold set the dense encoder alone is strongest; RRF fusion with lexical
-BM25 lowers ranking quality (a documented ablation finding).
+RRF fusion alone lowers ranking quality vs dense (BM25 noise dilutes the
+order), but cross-encoder re-scoring of the fused pool recovers it and sets
+the best overall config — recall from fusion, precision from the reranker.
 
 **Citation verification (the headline):** across the 150 questions the base
 model (Qwen2.5-14B) emitted 82 citations, **31.7% of them hallucinated**

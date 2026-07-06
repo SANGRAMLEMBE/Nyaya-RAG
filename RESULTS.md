@@ -8,14 +8,15 @@
 | dense (bge-m3) | 0.993 | 1.000 | 0.920 | 0.940 |
 | BM25 | 0.727 | 0.800 | 0.608 | 0.654 |
 | hybrid (RRF) | 0.873 | 0.953 | 0.755 | 0.803 |
-| hybrid + rerank | – | – | – | – |
+| hybrid + rerank (bge-reranker-v2-m3) | 0.993 | 1.000 | **0.933** | **0.950** |
 | naive baseline (old repo: recursive split + FAISS) | – | – | – | – |
 
-**Finding:** dense (bge-m3) alone is the strongest config on this gold set —
-RRF fusion with BM25 *lowers* MRR and nDCG (0.920→0.755, 0.940→0.803). The gold
-questions are semantic paraphrases of section headings, which the dense encoder
-captures well, while lexical BM25 introduces lower-ranked noise that RRF mixes
-in. Reranking (pending) and the naive baseline are still to be run.
+**Finding:** RRF fusion alone *lowers* ranking quality vs dense (MRR
+0.920→0.755) — BM25 noise dilutes the merged order. But re-scoring the fused
+pool with a cross-encoder recovers it and sets the best overall config:
+**hybrid + rerank, MRR 0.933 / nDCG@10 0.950** — recall from fusion, precision
+from joint (query, section) scoring. The naive baseline row awaits a separate
+run.
 
 ## 2. End-to-end answer quality (gold set, n=150)
 | Metric | pre-verifier | post-verifier |
