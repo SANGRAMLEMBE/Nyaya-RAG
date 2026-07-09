@@ -71,6 +71,11 @@ class JudgmentCatalogEntry(BaseModel):
         default=None, description="direct PDF URL from e-SCR — fill manually"
     )
     citation: str | None = None  # reporter citation, filled from the document
+    ik_tid: int | None = Field(
+        default=None,
+        description="Indian Kanoon doc id — pin the exact judgment when the "
+        "name is ambiguous (e.g. from indiankanoon.org/doc/<tid>/)",
+    )
     notes: str = ""
 
     @field_validator("url")
