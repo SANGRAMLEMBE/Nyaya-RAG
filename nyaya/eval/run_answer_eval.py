@@ -42,7 +42,7 @@ def _wrong_era(abbrs: list[str], expected: Era) -> bool:
     return False
 
 
-def run() -> dict[str, float]:
+def run(label: str = "base") -> dict[str, float]:
     from nyaya.generation.answer import LegalAnswerer
     from nyaya.retrieval.hybrid import HybridRetriever
 
@@ -90,9 +90,49 @@ def run() -> dict[str, float]:
         "era_post": era_ok_post / era_n if era_n else 0.0,
         "total_citations": total,
     }
-    print(f"RESULTS: {m}")
-    _write_results(m, n=answered)
+    print(f"RESULTS [{label}]: {m}")
+    if label == "base":
+        _write_results(m, n=answered)  # detailed pre/post table stays base-only
+    _write_comparison(label, m, n=answered)
     return m
+
+
+def _write_comparison(label: str, m: dict[str, float], n: int) -> None:
+    """Upsert one model's row in the fine-tuning before/after table (§2b).
+
+    Rebuilds the whole table from its current rows each call, so re-running a
+    label overwrites its row cleanly and rows stay in base -> sft -> dpo order.
+    """
+    header = "## 2b. Fine-tuning: citation hallucination by model (gold set)"
+    colhdr = "| model | n | hallucinated-citation rate (pre-verifier) | post-verifier |"
+    sep = "|---|---|---|---|"
+
+    path = Path("RESULTS.md")
+    text = path.read_text(encoding="utf-8") if path.exists() else "# Results\n\n"
+
+    # collect existing rows (label -> "n | pre | post") from a prior §2b table
+    rows: dict[str, str] = {}
+    block_re = re.compile(re.escape(header) + r".*?(?=\n## |\Z)", re.DOTALL)
+    existing = block_re.search(text)
+    if existing:
+        for ln in existing.group(0).splitlines():
+            cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+            if len(cells) == 4 and cells[0] not in ("model", "---") and cells[1].isdigit():
+                rows[cells[0]] = f"{cells[1]} | {cells[2]} | {cells[3]}"
+    rows[label] = f"{n} | {m['halluc_pre']:.3f} | {m['halluc_post']:.3f}"
+
+    order = ["base", "sft", "dpo"]
+    ordered = sorted(rows, key=lambda k: (order.index(k) if k in order else len(order), k))
+    table = "\n".join([header, colhdr, sep] + [f"| {k} | {rows[k]} |" for k in ordered])
+
+    if existing:
+        text = block_re.sub(table + "\n", text, count=1)
+    else:  # insert before §3 if present, else append
+        anchor = re.search(r"\n## 3\. ", text)
+        text = (text[: anchor.start()] + "\n" + table + "\n" + text[anchor.start():]
+                if anchor else text.rstrip() + "\n\n" + table + "\n")
+    path.write_text(text, encoding="utf-8")
+    print(f"RESULTS.md §2b updated: {label}")
 
 
 def _write_results(m: dict[str, float], n: int) -> None:

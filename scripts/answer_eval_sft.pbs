@@ -1,0 +1,68 @@
+#!/bin/bash
+#PBS -N nyaya-anseval-sft
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
+#PBS -l walltime=02:00:00
+#PBS -q gpu
+#PBS -j oe
+#PBS -o /scratch/srikanth/logs/answer_eval_sft.log
+
+# Answer-quality eval for the SFT model — the apples-to-apples number vs base.
+# Serves the SFT adapter via vLLM LoRA and runs the SAME gold-set pipeline the
+# base eval used, tagging results with --label sft so they land in RESULTS.md
+# section 2b (before/after) WITHOUT overwriting the base section-2 numbers.
+# Aborts if the adapter is missing (this job is meaningless on the base model).
+
+export HF_HUB_OFFLINE=1
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+export NYAYA_LLM_BASE_URL=http://localhost:8000/v1
+
+SCRATCH=/scratch/srikanth
+REPO=$SCRATCH/nyaya-rag
+cd $REPO
+module load python/3.11
+source .venv/bin/activate
+
+# PBS on this cluster does not isolate GPUs per job — every process defaults
+# to GPU 0 even on a 4-GPU node (caused a real OOM when two jobs collided).
+# Pin this job to the GPU with the most free memory.
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits | sort -t, -k2 -n | head -1 | cut -d, -f1)
+echo "pinned to GPU $CUDA_VISIBLE_DEVICES"
+
+BASE=$(python -c "from nyaya.config import settings; print(settings.generation_model)")
+ADAPTER=$REPO/models/sft-qwen2.5-14b/final
+if [ ! -d "$ADAPTER" ]; then
+    echo "no SFT adapter at $ADAPTER — nothing to evaluate, abort"; exit 1
+fi
+echo "=== serving SFT adapter via vLLM LoRA ==="
+
+vllm serve "$BASE" \
+    --host 0.0.0.0 --port 8000 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.85 \
+    --dtype bfloat16 \
+    --enable-lora --lora-modules sft-qwen14b=$ADAPTER \
+    > $SCRATCH/logs/vllm_eval_sft.log 2>&1 &
+VLLM_PID=$!
+export NYAYA_GENERATION_MODEL=sft-qwen14b
+
+echo "=== waiting for vLLM to be ready (up to ~20 min) ==="
+READY=0
+for i in $(seq 1 120); do
+    if curl -s http://localhost:8000/v1/models > /dev/null 2>&1; then
+        echo "vLLM ready after ~$((i*10))s"; READY=1; break
+    fi
+    sleep 10
+done
+if [ "$READY" -ne 1 ]; then
+    echo "vLLM did not become ready — aborting"; kill $VLLM_PID 2>/dev/null; exit 1
+fi
+
+echo "=== running answer-quality eval over the gold set (SFT) ==="
+python -m nyaya.eval.run_answer_eval --label sft
+
+echo "=== RESULTS.md section 2b (before/after) ==="
+sed -n '/## 2b\./,/## 3\./p' RESULTS.md
+
+echo "=== stopping vLLM ==="
+kill $VLLM_PID 2>/dev/null
