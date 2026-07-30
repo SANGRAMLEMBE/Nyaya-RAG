@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from nyaya.pipelines.chunk import _windows, chunk_document
+from nyaya.pipelines.chunk import OVERLAP_CHARS, TARGET_CHARS, _windows, chunk_document
 from nyaya.schema import Era, Subject
 
 # --- _windows unit tests -----------------------------------------------------
@@ -38,8 +38,14 @@ def test_200kb_cap_applied():
     # Use exactly 201KB — just over the 200KB cap. Don't go higher or laptop OOMs.
     huge = "word " * 41_000  # ~205KB
     result = _windows(huge)
-    total = sum(len(w) for w in result)
-    assert total <= 200_000 + 2_000  # capped + one extra target window
+    # Windows overlap by OVERLAP_CHARS, so summing their lengths double-counts the
+    # overlaps. What the cap actually bounds is how much SOURCE text is covered:
+    # each window after the first advances by (TARGET_CHARS - OVERLAP_CHARS).
+    stride = TARGET_CHARS - OVERLAP_CHARS
+    covered = (len(result) - 1) * stride + len(result[-1])
+    assert covered <= 200_000
+    # and no single window may exceed the target size
+    assert max(len(w) for w in result) <= TARGET_CHARS
 
 
 def test_no_paragraph_breaks_uses_sentence_split():

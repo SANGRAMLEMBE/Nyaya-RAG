@@ -58,6 +58,9 @@ def _windows(text: str, target: int = TARGET_CHARS, overlap: int = OVERLAP_CHARS
             while start < len(text):
                 end = min(start + target, len(text))
                 windows.append(text[start:end])
+                if end >= len(text):
+                    break  # final window reached the end — stop (else start would
+                    # snap back to len-overlap and the loop never terminates)
                 start = end - overlap
             return windows
 
