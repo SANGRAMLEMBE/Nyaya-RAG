@@ -2,8 +2,8 @@
 
 Reads configs/judgments_catalog.yaml, downloads each entry that has a verified
 https url, and writes the PDF + a sidecar meta json to data/raw/judgments/.
-Entries without a url are skipped and reported — nothing is fabricated
-(CLAUDE.md); you fill urls from e-SCR first.
+Entries without a url are skipped and reported — nothing is fabricated;
+fill urls from e-SCR first.
 
 Safety, matching the acts downloader: https-only, content validated by PDF
 magic bytes (not just content-type), sha256 recorded, polite delay between

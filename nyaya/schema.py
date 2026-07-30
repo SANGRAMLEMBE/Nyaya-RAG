@@ -58,8 +58,8 @@ class JudgmentCatalogEntry(BaseModel):
 
     Case titles are real, public case names (like act titles in the acts
     catalog). url + citation are filled MANUALLY from the actual e-SCR
-    document — never guessed (CLAUDE.md). The downloader refuses any entry
-    without a verified https url.
+    document — never guessed. The downloader refuses any entry without a
+    verified https url.
     """
 
     id: str = Field(pattern=r"^[a-z0-9_]+$", description="slug, e.g. 'sc_kesavananda_1973'")
@@ -90,7 +90,7 @@ class Judgment(BaseModel):
     """A parsed court judgment — metadata extracted, never invented.
 
     Every optional field is None/empty when the source text does not state it
-    (CLAUDE.md: unverifiable → flag, never fabricate). Chunk ids follow
+    (project rule: unverifiable → flag, never fabricate). Chunk ids follow
     '<id>:p<NNN>' per the Chunk docstring (e.g. 'sc_1973_kesavananda:p041').
     """
 

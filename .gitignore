@@ -20,6 +20,14 @@ wandb/
 # build artifacts
 *.egg-info/
 
+# LaTeX build artifacts (keep the .tex source and the .pdf only)
+*.aux
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
 # OS / editor junk (keep the public repo clean)
 .DS_Store
 Thumbs.db

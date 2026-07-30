@@ -3,7 +3,7 @@
 Source-agnostic (works on text from Indian Kanoon, e-SCR, or PDF extraction):
 the parser only reads what is printed. Extraction is strictly conservative —
 a field the text does not state comes back None/empty, never guessed
-(CLAUDE.md: unverifiable → flag, never fabricate).
+(project rule: unverifiable → flag, never fabricate).
 
 What gets extracted (PLAN M2: title / citation / bench / held):
   title    — "X v. Y" from the header, or PETITIONER/RESPONDENT blocks
