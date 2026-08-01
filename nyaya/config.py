@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     # synthetic-data generator — 14B is already cached on CHAMP; bump to the
     # 32B-AWQ (per PLAN week 5) once it is downloaded there
     synth_model: str = "Qwen/Qwen2.5-14B-Instruct"
-    # openai client is just used as the wire protocol to talk to our local vLLM server
+    # chat-completions endpoint of our own vLLM server, bound to localhost
     llm_base_url: str = "http://127.0.0.1:8000/v1"
 
     # retrieval knobs — these get ablated in eval/, results go in RESULTS.md

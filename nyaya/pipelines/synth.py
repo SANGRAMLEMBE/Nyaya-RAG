@@ -226,7 +226,7 @@ def _iter_statute_chunks(processed_dir: Path, limit: int | None = None):
 
 
 def _vllm_llm(model: str, base_url: str) -> LLM:
-    """Production LLM: the local vLLM server, OpenAI wire format over httpx."""
+    """Production LLM: the local vLLM server, chat-completions API over httpx."""
     import httpx
 
     def call(prompt: str) -> str:

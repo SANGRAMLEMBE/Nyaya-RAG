@@ -2,8 +2,8 @@
 
 ## ADR-001: Fully local stack, zero external APIs
 All inference (generation, embedding, reranking, eval-judging) runs on our own
-hardware. vLLM serves Qwen2.5-14B-Instruct on localhost; the OpenAI Python
-package is used only as a wire-protocol client to that local server. Rationale:
+hardware. vLLM serves Qwen2.5-14B-Instruct on localhost, reached over a plain
+HTTP chat-completions call — no vendor SDK in the product path. Rationale:
 (a) the product promise is that user legal queries never leave the device;
 (b) research depth — we own every layer; (c) reproducibility without billing keys.
 

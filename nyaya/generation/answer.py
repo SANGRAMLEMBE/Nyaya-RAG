@@ -1,11 +1,11 @@
 """Generates grounded legal answers using the local vLLM server (Qwen2.5-14B).
 
-Takes a query + retrieved chunks → formats a prompt → calls vLLM at
-settings.llm_base_url (OpenAI-compatible endpoint) → returns a structured
+Takes a query + retrieved chunks → formats a prompt → posts to the
+chat-completions endpoint at settings.llm_base_url → returns a structured
 answer with inline citations.
 
-The openai Python client is used purely as a wire protocol — zero calls
-to OpenAI's servers. All inference runs locally on CHAMP's A100.
+The call is a plain httpx POST to a server bound to localhost — no vendor SDK
+and no outbound network access. All inference runs locally on CHAMP's A100.
 
 Usage (once vLLM is running on CHAMP):
     from nyaya.generation.answer import LegalAnswerer

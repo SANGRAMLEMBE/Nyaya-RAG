@@ -33,7 +33,7 @@ rag = [
     "rank-bm25>=0.2",
     "fastapi>=0.111",
     "uvicorn>=0.30",
-    "openai>=1.30",        # wire-protocol client for the LOCAL vLLM server only
+    "httpx>=0.27",         # talks to the LOCAL vLLM server; no outbound calls
     "streamlit>=1.35",
 ]
 train = [
